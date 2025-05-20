@@ -1,0 +1,11 @@
+version = 1
+
+[envs.yazi]
+channels = ["conda-forge"]
+dependencies = { yazi = "*" }
+exposed = { ya = "ya", yazi = "yazi" }
+
+[envs.chezmoi]
+channels = ["conda-forge"]
+dependencies = { chezmoi = "*" }
+exposed = { chezmoi = "chezmoi" }

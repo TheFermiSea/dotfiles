@@ -1,0 +1,5 @@
+[opener]
+notebook = [{ run = 'euporie-notebook "$@"', block = true }]
+
+[open]
+prepend_rules = [{ name = '*.ipynb', use = "notebook" }]

@@ -9,3 +9,8 @@ exposed = { ya = "ya", yazi = "yazi" }
 channels = ["conda-forge"]
 dependencies = { chezmoi = "*" }
 exposed = { chezmoi = "chezmoi" }
+
+[envs.lazygit]
+channels = ["conda-forge"]
+dependencies = { lazygit = "*" }
+exposed = { lazygit = "lazygit" }

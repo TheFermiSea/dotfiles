@@ -1,0 +1,120 @@
+# =================================================================
+# 1. GLOBAL DEFAULTS & OPTIMIZATIONS
+# =================================================================
+Host *
+    # --- Connection Multiplexing ---
+    ControlMaster auto
+    ControlPath ~/.ssh/sockets/%r@%h-%p
+    ControlPersist 10m
+
+    # --- Silence Background Noise (CRITICAL) ---
+    # Prevents "debug1" output from interfering with your shell
+    LogLevel QUIET
+
+    # --- Connection Stability ---
+    ServerAliveInterval 60
+    ServerAliveCountMax 3
+    TCPKeepAlive yes
+
+    # --- macOS Integration ---
+    AddKeysToAgent yes
+    UseKeychain yes
+
+    # --- Security ---
+    ForwardAgent no
+    ForwardX11 no
+
+# =================================================================
+# 2. PROXMOX NODES (25GbE Mesh Access)
+# =================================================================
+# Uses the validated 10.25.x.x Mesh IPs for maximum bandwidth.
+# 192.168.2.x is avoided (it is only 1GbE).
+
+Host pve*
+    User root
+    # AES-GCM is hardware accelerated on Xeon Gold 6248
+    Ciphers aes128-gcm@openssh.com,aes256-gcm@openssh.com
+    Compression no 
+
+# PVE1: Gateway (Via Tailscale)
+Host pve1
+    HostName 100.127.208.104
+
+# PVE2: Jump via PVE1 -> 25GbE Mesh (Verified IP)
+Host pve2
+    HostName 10.25.1.2
+    ProxyJump pve1
+
+# PVE3: Jump via PVE1 -> 25GbE Mesh (Verified IP)
+Host pve3
+    HostName 10.25.2.2
+    ProxyJump pve1
+
+# =================================================================
+# 3. COMPUTE CLUSTERS (Private Network 10.0.0.x)
+# =================================================================
+# Access via 'ssh qe-node1' or 'ssh vasp-01'
+
+Host qe* vasp*
+    ProxyJump pve1
+    StrictHostKeyChecking no
+    UserKnownHostsFile /dev/null
+
+# --- Quantum Espresso Nodes (Ubuntu) ---
+Host qe*
+    User ubuntu
+
+Host qe-node1
+    HostName 10.0.0.10
+
+Host qe-node2
+    HostName 10.0.0.11
+
+Host qe-node3
+    HostName 10.0.0.12
+
+# --- VASP Nodes (Rocky Linux / Root) ---
+Host vasp*
+    User root
+
+Host vasp-01
+    HostName 10.0.0.20
+
+Host vasp-02
+    HostName 10.0.0.21
+
+Host vasp-03
+    HostName 10.0.0.22
+
+# =================================================================
+# 4. SPECIALIZED HOSTS
+# =================================================================
+
+Host slurm-ctl
+    HostName 10.0.0.5
+    User root
+    ProxyJump pve1
+    StrictHostKeyChecking no
+    UserKnownHostsFile /dev/null
+
+Host ultrafastlab-x11
+    HostName 100.110.50.69
+    User jens
+    ForwardX11 yes
+    ForwardX11Trusted yes
+
+Host github.com-easternanemone
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/id_ed25519_easternanemone
+    IdentitiesOnly yes
+
+Host github.com-thefermisea
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/id_ed25519_thefermisea
+    IdentitiesOnly yes
+
+# --- AI Agents LXC (CT 211 on PVE1, via Tailscale) ---
+Host ai-agents
+    User root

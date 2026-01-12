@@ -1,0 +1,140 @@
+# ======================================================================
+# Zsh Configuration File
+# Refactored for organization and efficiency (via Zsh PATH arrays)
+# ======================================================================
+
+# ====== Shell Hooks & Initialization (Load Early) ======
+# These should run early to set up shell features and hooks
+eval "$(zoxide init zsh)"
+eval "$(ast-grep completions)"
+eval "$(sg completions)"
+eval "$(direnv hook zsh)"
+fpath=($HOME/.zfunc $fpath) # PDM related fpath setting
+autoload -Uz compinit && compinit
+
+# Starship Prompt Initialization
+eval "$(starship init zsh)"
+
+
+# ====== PATH Management (Consolidated) ======
+# Use Zsh array for PATH management to prevent duplicates and ensure order
+typeset -U path
+path=(
+    $HOME/bin
+    $HOME/.local/bin
+    /usr/local/bin
+    /usr/local/sbin
+    /opt/homebrew/bin
+    /opt/homebrew/sbin
+    /usr/bin
+    /bin
+    /usr/sbin
+    /sbin
+    $HOME/texpresso/build
+    $HOME/go/bin
+    /Users/briansquires/go/bin # Duplicate of $HOME/go/bin, but kept for explicitness
+    $HOME/.cache/lm-studio/bin
+    "/Applications/KiCad/KiCad.app/Contents/MacOS"
+    "/Applications/KiCad/KiCad.app/Contents/MacOS/kicad-cli"
+    /Users/briansquires/.opencode/bin
+    $HOME/.antigravity/antigravity/bin
+    # $HOME/.local/bin is already included above
+    $path # Keep existing unique paths
+)
+
+# ====== API Keys & Tokens ======
+# Load sensitive credentials from separate file (not committed to git)
+[ -f "$HOME/.zshrc.secrets" ] && source "$HOME/.zshrc.secrets"
+
+# ====== NVM Configuration (loads early to allow PATH overrides) ======
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# ====== App-specific settings & ENV variables ======
+export MICRO_CONFIG_HOME="$HOME/.config/micro"
+export CLICOLOR=1
+export LSCOLORS=ExFxBxDxCxegedabagacad
+export LESS='-R -X -F'
+export JULES_API_KEY="AQ.Ab8RN6Lkpg9h_W2uJSFlstF3c05flqwi3Nppw3nLnQCAK5e1kA"
+export BUN_INSTALL="$HOME/.bun"
+# Unset conflicting environment variables for Graphiti MCP
+unset SEMAPHORE_LIMIT MAX_REFLEXION_ITERATIONS
+
+# ====== Sourced ENV Files and Completions ======
+. "$HOME/.cargo/env"
+. "$HOME/.langflow/uv/env"
+source ~/.octocode-completions
+# bun completions
+[ -s "/Users/briansquires/.bun/_bun" ] && source "/Users/briansquires/.bun/_bun"
+# source /Users/briansquires/code/rust-daq/.beads/bd-alias.sh
+
+
+# ====== Prompt & Shell Settings ======
+# PROMPT removed; using Starship prompt instead
+HISTFILE="$HOME/.zsh_history"
+HISTSIZE=5000
+SAVEHIST=5000
+setopt append_history
+setopt hist_ignore_dups
+setopt share_history
+
+if [[ "$TERM_PROGRAM" == "ghostty" ]]; then
+  export TERM=xterm-256color
+fi
+
+# ====== Aliases & Functions ======
+alias ls='eza --icons=always -1 -l'
+alias ll='ls -lah'
+alias gs='git status'
+#alias python='python3'
+#alias pip='pip3' # Redundant, replaced by alias below
+alias pip="uv pip"
+alias bd-gemini="cd ~/.local/share/gemini-cli/issues && bd"
+alias ccdsp="claude --dangerously-skip-permissions"
+alias ccdspc="claude --dangerously-skip-permissions -c"
+alias zz='zellij'
+
+# Connect to pve2 Claude Code session function
+pve2-claude() {
+    ssh -t pve2 "./claude-code-attach.sh || tmux attach -t claude-code || tmux new -s claude-code"
+}
+
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+export CONTEXT7_API_KEY="ctx7sk-49242734-8cb7-467d-a1d6-f2137c4bf554"
+
+# Amp CLI
+export PATH="/Users/briansquires/.amp/bin:$PATH"
+export ASTA_API_KEY="dNCWvzUJp5aFcB0npK0aGZ1OvH33BP06rsNvvnG9"
+export MORPH_MODEL="auto"
+#compdef opencode
+###-begin-opencode-completions-###
+#
+# yargs command completion script
+#
+# Installation: opencode completion >> ~/.zshrc
+#    or opencode completion >> ~/.zprofile on OSX.
+#
+_opencode_yargs_completions()
+{
+  local reply
+  local si=$IFS
+  IFS=$'
+' reply=($(COMP_CWORD="$((CURRENT-1))" COMP_LINE="$BUFFER" COMP_POINT="$CURSOR" opencode --get-yargs-completions "${words[@]}"))
+  IFS=$si
+  if [[ ${#reply} -gt 0 ]]; then
+    _describe 'values' reply
+  else
+    _default
+  fi
+}
+if [[ "'${zsh_eval_context[-1]}" == "loadautofunc" ]]; then
+  _opencode_yargs_completions "$@"
+else
+  compdef _opencode_yargs_completions opencode
+fi
+###-end-opencode-completions-###
+

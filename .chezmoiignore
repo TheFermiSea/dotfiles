@@ -1,0 +1,24 @@
+# Claude caches/runtime
+.dot_claude/plugins/cache/**
+.dot_claude/plugins/private_cache/**
+.dot_claude/plugins/dot_DS_Store
+.dot_claude/plugins/.DS_Store
+
+# Gemini runtime/cache
+.dot_gemini/antigravity-browser-profile/**
+.dot_gemini/history/**
+.dot_gemini/tmp/**
+.dot_gemini/antigravity/**
+
+# Codex runtime
+.dot_codex/history.jsonl
+.dot_codex/log/**
+.dot_codex/sessions/**
+
+# Node modules / cache
+**/node_modules/**
+**/Cache/**
+**/.DS_Store
+
+# Empty/unused
+.dot_config/gemini-cli/**

@@ -1,0 +1,60 @@
+{
+  "ide": {
+    "enabled": true,
+    "hasSeenNudge": true
+  },
+  "mcpServers": {
+    "pal": {
+      "command": "/Users/briansquires/pal-mcp-server/pal-mcp-server"
+    },
+    "context7": {
+      "httpUrl": "https://mcp.context7.com/mcp",
+      "headers": {
+        "CONTEXT7_API_KEY": "",
+        "Accept": "application/json, text/event-stream"
+      }
+    }
+  },
+  "model": {
+    "compressionThreshold": 0.6
+  },
+  "general": {
+    "previewFeatures": true,
+    "sessionRetention": {
+      "enabled": true
+    },
+    "enablePromptCompletion": true
+  },
+  "output": {
+    "format": "json"
+  },
+  "ui": {
+    "showStatusInTitle": true,
+    "showMemoryUsage": true,
+    "showCitations": true,
+    "showModelInfoInChat": true
+  },
+  "context": {
+    "loadMemoryFromIncludeDirectories": true
+  },
+  "tools": {
+    "shell": {
+      "showColor": true
+    },
+    "autoAccept": true,
+    "useRipgrep": true
+  },
+  "experimental": {
+    "codebaseInvestigatorSettings": {
+      "maxNumTurns": 25
+    }
+  },
+  "security": {
+    "folderTrust": {
+      "enabled": true
+    },
+    "auth": {
+      "selectedType": "oauth-personal"
+    }
+  }
+}

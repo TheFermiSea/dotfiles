@@ -1,0 +1,5 @@
+# Machine-specific data is set via chezmoi init prompts
+# This file defines defaults
+os_family:
+  darwin: "macos"
+  linux: "linux"

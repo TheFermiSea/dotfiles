@@ -1,0 +1,21 @@
+{
+  "name": "asta",
+  "version": "1.0.0",
+  "description": "Scientific research tools powered by Allen AI's Asta framework - search 225M+ papers, synthesize literature, and verify citations",
+  "author": {
+    "name": "briansquires"
+  },
+  "repository": "https://github.com/allenai/asta-bench",
+  "homepage": "https://allenai.org/asta",
+  "license": "MIT",
+  "keywords": [
+    "research",
+    "academic",
+    "papers",
+    "citations",
+    "literature",
+    "science",
+    "semantic-scholar",
+    "asta"
+  ]
+}

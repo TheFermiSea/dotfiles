@@ -3,6 +3,11 @@
 .dot_claude/plugins/private_cache/**
 .dot_claude/plugins/dot_DS_Store
 .dot_claude/plugins/.DS_Store
+.dot_claude/plugins/private_install-counts-cache.json
+.dot_claude/plugins/private_installed_plugins.json
+.dot_claude/plugins/private_marketplaces/**
+.dot_claude/plugins/config.json
+.dot_claude/plugins/known_marketplaces.json
 
 # Gemini runtime/cache
 .dot_gemini/antigravity-browser-profile/**

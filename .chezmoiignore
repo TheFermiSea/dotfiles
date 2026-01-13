@@ -1,4 +1,4 @@
-# Claude caches/runtime
+# Claude caches/runtime and plugin metadata
 .dot_claude/plugins/cache/**
 .dot_claude/plugins/private_cache/**
 .dot_claude/plugins/dot_DS_Store

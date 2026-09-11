@@ -1,0 +1,73 @@
+// zellij configuration — distributed by chezmoi from TheFermiSea/dotfiles.
+//
+// Written 2026-09-11 to REPLACE a symlink into ~/dotfiles_jruben11, a clone of
+// github.com/jreuben11/dotfiles last updated 2025-10-31. That file was 536 lines
+// but essentially zellij's stock default: 161 default keybinds and every
+// interesting option (theme, simplified_ui, default_layout, copy_command)
+// commented out. Nothing was lost by replacing it, and now the config is
+// actually yours to change.
+//
+// Defaults are left implicit on purpose. Only settings that differ from stock
+// are written here, each with the reason, so the file stays readable instead of
+// growing back into 500 lines of commented-out boilerplate.
+
+// --- shell ------------------------------------------------------------------
+default_shell "zsh"
+
+// --- session persistence ----------------------------------------------------
+// The single biggest win for how these machines are used: long-running agent
+// sessions (Claude, Codex) that must survive a dropped SSH connection or a
+// zellij restart. Without this, a detach that goes wrong loses the pane history.
+session_serialization true
+serialize_pane_viewport true
+// How much scrollback to keep per pane when serializing. Agent output is long;
+// the default keeps too little to reconstruct what happened.
+scrollback_lines_to_serialize 10000
+
+// --- scrollback -------------------------------------------------------------
+// Matches the tmux config's history-limit. A build log or a bd listing blows
+// through the default in seconds.
+scroll_buffer_size 100000
+
+// --- UI ---------------------------------------------------------------------
+// Pane frames stay ON. With several agents running at once, knowing which pane
+// is focused is worth the two columns it costs.
+pane_frames true
+theme "gruvbox-dark"
+mouse_mode true
+
+// Do not quit the whole session on the last pane closing — detach instead.
+// Same reasoning as tmux `bind d detach-client`: for an agent session, exit is
+// almost never what was meant.
+on_force_close "detach"
+
+// --- clipboard --------------------------------------------------------------
+// macOS uses pbcopy; Linux needs an explicit command. Zellij has no per-OS
+// conditional, so this is set by chezmoi at apply time.
+{{ if eq .chezmoi.os "darwin" -}}
+copy_command "pbcopy"
+{{- else -}}
+copy_command "xclip -selection clipboard"
+{{- end }}
+copy_on_select false
+
+// --- MACHINE IDENTITY -------------------------------------------------------
+// zellij has no direct equivalent of tmux's status-left, so the machine name is
+// carried by the default session name instead. chezmoi bakes the hostname in at
+// apply time, which means `zellij` with no arguments attaches to a session
+// whose name states where you are — visible in the tab bar and in
+// `zellij list-sessions` from any other machine.
+//
+// Colour-coding to match the Claude status-line chips would need the zjstatus
+// plugin; not worth the dependency while tmux is the primary multiplexer.
+default_session_name "{{ .chezmoi.hostname }}"
+attach_to_session true
+
+// --- keybinds ---------------------------------------------------------------
+// Stock keybinds are kept (clear-defaults is NOT set). Only additions below.
+keybinds {
+    shared_except "locked" {
+        // Detach is the safe exit. Bound close to tmux's prefix-d muscle memory.
+        bind "Ctrl q" { Detach; }
+    }
+}

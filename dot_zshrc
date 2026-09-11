@@ -184,7 +184,13 @@ eval "$(direnv hook zsh)"
 
 # Completions (must be after compinit)
 eval "$(ast-grep completions)"
-eval "$(sg completions)"
+# REMOVED 2026-09-11. `sg` is ast-grep's DEPRECATED alias: since mise put
+# ast-grep 0.45.3 ahead of the Homebrew copy on PATH, every invocation prints
+# a three-line "WARNING: `sg` is deprecated" banner to stderr — which this ran
+# on EVERY new shell, corrupting the Starship prompt in Ghostty.
+# The line above (ast-grep completions) already installs the same completions;
+# this was a redundant duplicate. Use `ast-grep`, not `sg`.
+# eval "$(sg completions)"
 
 # Starship Prompt Initialization
 eval "$(starship init zsh)"

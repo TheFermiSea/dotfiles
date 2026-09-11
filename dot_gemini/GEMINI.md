@@ -1,0 +1,15 @@
+## Gemini Added Memories
+- Save a memory about where this development plan is located and how to stay within the guidelines of the plan
+- Always use beads (bd) to track issues, progress, and tasks.
+- The user prefers to install Intel oneAPI and CUDA toolkits directly within the computational VMs rather than on the Proxmox host nodes.
+- The SLURM deployment was paused during Phase 3 due to total cluster connectivity loss. VM 500 (slurm-ctl) is created but unreachable; the immediate next step is to execute a Cloud-Init hard reset on VM 500 once pve1 is back online. Refer to docs/RESUME-PROTOCOL-2025-12-10.md.
+- Potential bug in upload_smart_stream: pl_set_param for PARAM_SMART_STREAM_EXP_PARAMS might require &ss_struct instead of ss_struct if the API expects a pointer to the value (pointer).
+- The remote machine 'maitai' (100.117.5.12) is accessible via SSH as user 'maitai'. The PVCAM SDK is located at /opt/pvcam/sdk. The project on remote is at ~/rust-daq. I fixed a bug in upload_smart_stream by passing the struct pointer value instead of its address to pl_set_param.
+- I have thoroughly updated the documentation for the PVCAM driver to reflect the robust auto-restart mechanism for the 85-frame stall hardware errata and removed incorrect claims about buffer filling. I also updated the MAITAI_SETUP.md and PVCAM_SETUP.md guides.
+- Fixed ELL14 driver position parsing (signed 32-bit hex overflow) and Newport 1830-C serial flushing (9600 baud race condition).
+- pve1 OS: Proxmox VE 9.1 (Debian 13 Trixie), CPU: 40 Cores, RAM: ~376GB, HugePages: Disabled. Disk: 45GB root (98% used), 799GB ZFS data.
+- VASP Cluster: vasp-01/02/03 are operational. SSH keys fixed. Yambo/VASP dir checksums differ on 02/03 but execution works.
+- Cluster ZFS Capacity (Jan 2026): pve1 72%, pve2 84% (Warn), pve3 34%. pve2 high usage due to hosting slurm-ctl (200GB) and vasp-02.
+- vLLM Deployment: Scripts at /root/scripts/ on pve1. Setup running (PID 97411). Models: OR1-Behemoth, Strand-Rust-Coder-14B. Forwarding: pve1:8000 -> vasp-01:8000.
+- pve1 configuration: Added vasp-01/02/03 and slurm-ctl IPs to /etc/hosts to enable hostname resolution for scripts. vLLM setup running in background (PID 100189).
+- The project build failed due to 'No space left on device' on /System/Volumes/Data. Clearing the 'target' directory resolved it.

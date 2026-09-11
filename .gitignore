@@ -1,0 +1,12 @@
+# The user's ~/.gitignore_global excludes CLAUDE.md / GEMINI.md / FOR_ME.md /
+# REPO_PARSE.md in EVERY repo, which is right for source repos — it stops a
+# personal instruction file being committed into someone else's project.
+#
+# It is wrong HERE. This repo's whole job is to distribute those files, and the
+# rule silently kept dot_claude/CLAUDE.md untracked for months: chezmoi managed
+# it, `chezmoi status` showed it pending, but git never carried it, so it reached
+# no other machine. Negate the rule for the files this repo exists to ship.
+!CLAUDE.md
+!GEMINI.md
+!dot_claude/CLAUDE.md
+!dot_gemini/GEMINI.md

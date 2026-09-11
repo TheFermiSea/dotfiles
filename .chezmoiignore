@@ -121,3 +121,11 @@ AGENTS.md
 # host's settings.json actually denies. Shared content ships as
 # .claude/rules/00-global.md instead; Claude Code loads all of ~/.claude/rules/.
 .claude/CLAUDE.md
+
+# ~/.zshrc.secrets is NOT managed (removed 2026-09-11). It is Mac-only, and the
+# age-encrypted source entry made `chezmoi status` return EMPTY on every server
+# that has no age key -- the error truncated the walk, so drift was invisible
+# while `chezmoi apply` still overwrote files. Proven: appending a line to
+# ~/.claude/rules/context7.md produced no status output and the next apply
+# silently reverted it. Back this file up out-of-band; do not re-add it here.
+.zshrc.secrets

@@ -61,5 +61,9 @@
   "inputNeededNotifEnabled": true,
   "agentPushNotifEnabled": true,
   "attribution.commit": false,
-  "attribution.pr": false
+  "attribution.pr": false,
+  "statusLine": {
+    "type": "command",
+    "command": "python3 $HOME/.claude/hooks/statusline.py"
+  }
 }

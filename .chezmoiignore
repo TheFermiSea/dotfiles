@@ -1,29 +1,80 @@
-# Claude caches/runtime and plugin metadata
-.dot_claude/plugins/cache/**
-.dot_claude/plugins/private_cache/**
-.dot_claude/plugins/dot_DS_Store
-.dot_claude/plugins/.DS_Store
-.dot_claude/plugins/private_install-counts-cache.json
-.dot_claude/plugins/private_installed_plugins.json
-.dot_claude/plugins/private_marketplaces/**
-.dot_claude/plugins/config.json
-.dot_claude/plugins/known_marketplaces.json
+# .chezmoiignore — patterns match TARGET paths (e.g. ".claude/plugins/cache/**"),
+# NOT source names. The previous version used source-style names with a leading
+# dot (".dot_claude/plugins/cache/**") so every rule silently matched nothing,
+# and 332 cache files were tracked as a result. Rewritten 2026-09-11.
 
-# Gemini runtime/cache
-.dot_gemini/antigravity-browser-profile/**
-.dot_gemini/history/**
-.dot_gemini/tmp/**
-.dot_gemini/antigravity/**
+# ---------------------------------------------------------------------------
+# LIVE CREDENTIALS — never manage these. They rotate constantly, so managing
+# them guarantees conflicts and stale-token reverts. On 2026-09-11 the repo
+# would have rolled ~/.codex/auth.json back to a January token.
+# ---------------------------------------------------------------------------
+.codex/auth.json
+.gemini/oauth_creds.json
+.gemini/google_accounts.json
+.config/opencode/auth.json
+.claude/.credentials.json
+.aws/credentials
+.netrc
 
-# Codex runtime
-.dot_codex/history.jsonl
-.dot_codex/log/**
-.dot_codex/sessions/**
+# ---------------------------------------------------------------------------
+# Claude Code runtime, caches and plugin state
+# ---------------------------------------------------------------------------
+.claude/plugins/cache/**
+.claude/plugins/marketplaces/**
+.claude/plugins/config.json
+.claude/plugins/known_marketplaces.json
+.claude/plugins/installed_plugins.json
+.claude/plugins/install-counts-cache.json
+.claude/backups/**
+.claude/cache/**
+.claude/file-history/**
+.claude/history.jsonl
+.claude/jobs/**
+.claude/projects/**
+.claude/todos/**
+.claude/shell-snapshots/**
+.claude/statsig/**
+.claude/paste-cache/**
+.claude/ide/**
+.claude/daemon*
+.claude/chrome/**
+.claude/local-marketplaces/**
+.claude/*.log
+.claude/*.lock
+.claude/.last-*
+.claude/mcp-needs-auth-cache.json
+.claude/gh-pr-status-cache.json
 
-# Node modules / cache
+# ---------------------------------------------------------------------------
+# Codex / Gemini runtime
+# ---------------------------------------------------------------------------
+.codex/history.jsonl
+.codex/log/**
+.codex/sessions/**
+.gemini/tmp/**
+.gemini/history/**
+.gemini/antigravity/**
+.gemini/antigravity-browser-profile/**
+
+# ---------------------------------------------------------------------------
+# opencode / superpowers runtime
+# ---------------------------------------------------------------------------
+.config/opencode/cache/**
+.config/superpowers/conversation-archive/**
+
+# ---------------------------------------------------------------------------
+# Editor / tool state that is machine-local by nature
+# ---------------------------------------------------------------------------
+.config/nvim/lazy-lock.json
+.local/state/**
+.local/share/nvim/**
+
+# ---------------------------------------------------------------------------
+# Generic noise
+# ---------------------------------------------------------------------------
 **/node_modules/**
+**/__pycache__/**
 **/Cache/**
 **/.DS_Store
-
-# Empty/unused
-.dot_config/gemini-cli/**
+*.pyc
+*.swp

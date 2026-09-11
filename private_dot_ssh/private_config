@@ -97,11 +97,27 @@ Host slurm-ctl
     StrictHostKeyChecking no
     UserKnownHostsFile /dev/null
 
+Host leabs-dev
+    HostName 100.109.21.118
+    User brian
+
 Host ultrafastlab-x11
     HostName 100.110.50.69
     User jens
     ForwardX11 yes
     ForwardX11Trusted yes
+
+# =================================================================
+# 5. GITHUB ACCOUNTS
+# =================================================================
+# Default github.com uses TheFermiSea (primary account)
+# Use github.com-easternanemone explicitly for secondary account
+
+Host github.com
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/id_ed25519_thefermisea
+    IdentitiesOnly yes
 
 Host github.com-easternanemone
     HostName github.com
@@ -118,3 +134,49 @@ Host github.com-thefermisea
 # --- AI Agents LXC (CT 211 on PVE1, via Tailscale) ---
 Host ai-agents
     User root
+
+Host ai-proxy
+    HostName 100.105.113.58
+    User brian
+
+Host github.com
+    HostName github.com
+    User git
+    ControlMaster no
+    ControlPath none
+    IdentitiesOnly yes
+
+Host github.com-thefermisea
+    HostName github.com
+    User git
+    ControlMaster no
+    ControlPath none
+    IdentitiesOnly yes
+
+Host github.com-easternanemone
+    HostName github.com
+    User git
+    ControlMaster no
+    ControlPath none
+    IdentitiesOnly yes
+
+Host github.com
+    HostName github.com
+    User git
+    ControlMaster no
+    ControlPath none
+    IdentitiesOnly yes
+
+Host github.com-thefermisea
+    HostName github.com
+    User git
+    ControlMaster no
+    ControlPath none
+    IdentitiesOnly yes
+
+Host github.com-easternanemone
+    HostName github.com
+    User git
+    ControlMaster no
+    ControlPath none
+    IdentitiesOnly yes

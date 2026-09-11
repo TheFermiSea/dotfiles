@@ -1,3 +1,177 @@
+# If you come from bash you might have to change your $PATH.
+# export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
+
+# Path to your Oh My Zsh installation.
+export ZSH="$HOME/.oh-my-zsh"
+
+# Set name of the theme to load --- if set to "random", it will
+# load a random theme each time Oh My Zsh is loaded, in which case,
+# to know which specific one was loaded, run: echo $RANDOM_THEME
+# See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
+ZSH_THEME="robbyrussell"
+
+# Set list of themes to pick from when loading at random
+# Setting this variable when ZSH_THEME=random will cause zsh to load
+# a theme from this variable instead of looking in $ZSH/themes/
+# If set to an empty array, this variable will have no effect.
+# ZSH_THEME_RANDOM_CANDIDATES=( "robbyrussell" "agnoster" )
+
+# Uncomment the following line to use case-sensitive completion.
+# CASE_SENSITIVE="true"
+
+# Uncomment the following line to use hyphen-insensitive completion.
+# Case-sensitive completion must be off. _ and - will be interchangeable.
+# HYPHEN_INSENSITIVE="true"
+
+# Uncomment one of the following lines to change the auto-update behavior
+# zstyle ':omz:update' mode disabled  # disable automatic updates
+# zstyle ':omz:update' mode auto      # update automatically without asking
+# zstyle ':omz:update' mode reminder  # just remind me to update when it's time
+
+# Uncomment the following line to change how often to auto-update (in days).
+# zstyle ':omz:update' frequency 13
+
+# Uncomment the following line if pasting URLs and other text is messed up.
+# DISABLE_MAGIC_FUNCTIONS="true"
+
+# Uncomment the following line to disable colors in ls.
+# DISABLE_LS_COLORS="true"
+
+# Uncomment the following line to disable auto-setting terminal title.
+# DISABLE_AUTO_TITLE="true"
+
+# Uncomment the following line to enable command auto-correction.
+# ENABLE_CORRECTION="true"
+
+# Uncomment the following line to display red dots whilst waiting for completion.
+# You can also set it to another string to have that shown instead of the default red dots.
+# e.g. COMPLETION_WAITING_DOTS="%F{yellow}waiting...%f"
+# Caution: this setting can cause issues with multiline prompts in zsh < 5.7.1 (see #5765)
+# COMPLETION_WAITING_DOTS="true"
+
+# Uncomment the following line if you want to disable marking untracked files
+# under VCS as dirty. This makes repository status check for large repositories
+# much, much faster.
+# DISABLE_UNTRACKED_FILES_DIRTY="true"
+
+# Uncomment the following line if you want to change the command execution time
+# stamp shown in the history command output.
+# You can set one of the optional three formats:
+# "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
+# or set a custom format using the strftime function format specifications,
+# see 'man strftime' for details.
+# HIST_STAMPS="mm/dd/yyyy"
+
+# Would you like to use another custom folder than $ZSH/custom?
+# ZSH_CUSTOM=/path/to/new-custom-folder
+
+# Which plugins would you like to load?
+# Standard plugins can be found in $ZSH/plugins/
+# Custom plugins may be added to $ZSH_CUSTOM/plugins/
+# Example format: plugins=(rails git textmate ruby lighthouse)
+# Add wisely, as too many plugins slow down shell startup.
+plugins=(git)
+
+source $ZSH/oh-my-zsh.sh
+
+# User configuration
+
+# export MANPATH="/usr/local/man:$MANPATH"
+
+# You may need to manually set your language environment
+# export LANG=en_US.UTF-8
+
+# Preferred editor for local and remote sessions
+# if [[ -n $SSH_CONNECTION ]]; then
+#   export EDITOR='vim'
+# else
+#   export EDITOR='nvim'
+# fi
+
+# Compilation flags
+# export ARCHFLAGS="-arch $(uname -m)"
+
+# Set personal aliases, overriding those provided by Oh My Zsh libs,
+# plugins, and themes. Aliases can be placed here, though Oh My Zsh
+# users are encouraged to define aliases within a top-level file in
+# the $ZSH_CUSTOM folder, with .zsh extension. Examples:
+# - $ZSH_CUSTOM/aliases.zsh
+# - $ZSH_CUSTOM/macos.zsh
+# For a full list of active aliases, run `alias`.
+#
+# Example aliases
+# alias zshconfig="mate ~/.zshrc"
+# alias ohmyzsh="mate ~/.oh-my-zsh"
+# Added by ForgeCode installer
+export PATH="/Users/briansquires/.local/bin:$PATH"
+# Recover from shells started in directories that were deleted after the session
+# was opened. Without this, relative-path commands fail with getcwd errors.
+if ! /bin/pwd -P >/dev/null 2>&1; then
+    cd "$HOME" || return 1
+fi
+
+# Cursor Agent shell integration is expensive to generate; cache the generated
+# script so the behavior stays intact without re-running the generator on every
+# shell startup. Auto-record is disabled by default for faster startup, but can
+# be re-enabled for a shell by setting ENABLE_CURSOR_AGENT_AUTO_RECORD=1.
+load_cursor_agent_shell_integration() {
+    if [[ -n "${_CURSOR_AGENT_SHELL_INTEGRATION_LOADED:-}" ]]; then
+        return
+    fi
+
+    local agent_cmd="$HOME/.local/bin/agent"
+    local cache_dir="${XDG_CACHE_HOME:-$HOME/.cache}/zsh"
+    local cache_file="$cache_dir/cursor-agent-shell-integration.zsh"
+    local chat_id_file="$cache_dir/cursor-agent-chat-id"
+    local cached_chat_id
+    local tmp_file
+
+    if [[ ! -x "$agent_cmd" ]]; then
+        return
+    fi
+
+    mkdir -p "$cache_dir" || return
+
+    if [[ -z "${ENABLE_CURSOR_AGENT_AUTO_RECORD:-}" && -z "${CURSOR_RECORD_SESSION:-}" ]]; then
+        export CURSOR_RECORD_SESSION=1
+    fi
+
+    if [[ -z "${CURSOR_AGENT_CHAT_ID:-}" && -r "$chat_id_file" ]]; then
+        cached_chat_id=$(<"$chat_id_file")
+        if [[ -n "$cached_chat_id" ]]; then
+            export CURSOR_AGENT_CHAT_ID="$cached_chat_id"
+        fi
+    fi
+
+    if [[ ! -r "$cache_file" || "$agent_cmd" -nt "$cache_file" ]]; then
+        tmp_file="$cache_file.$$"
+        if "$agent_cmd" shell-integration zsh >| "$tmp_file"; then
+            mv -f "$tmp_file" "$cache_file"
+        else
+            rm -f "$tmp_file"
+        fi
+    fi
+
+    if [[ -r "$cache_file" ]]; then
+        _CURSOR_AGENT_SHELL_INTEGRATION_LOADED=1
+        source "$cache_file"
+    fi
+
+    if [[ -n "${CURSOR_AGENT_CHAT_ID:-}" ]]; then
+        print -r -- "$CURSOR_AGENT_CHAT_ID" >| "$chat_id_file"
+    fi
+}
+
+load_cursor_agent_shell_integration
+
+# OPENSPEC:START
+# OpenSpec shell completions configuration
+fpath=("/Users/briansquires/.oh-my-zsh/custom/completions" "$HOME/.zfunc" $fpath)
+fpath+=~/.zfunc
+autoload -Uz compinit
+compinit
+# OPENSPEC:END
+
 # ======================================================================
 # Zsh Configuration File
 # Refactored for organization and efficiency (via Zsh PATH arrays)
@@ -6,11 +180,11 @@
 # ====== Shell Hooks & Initialization (Load Early) ======
 # These should run early to set up shell features and hooks
 eval "$(zoxide init zsh)"
+eval "$(direnv hook zsh)"
+
+# Completions (must be after compinit)
 eval "$(ast-grep completions)"
 eval "$(sg completions)"
-eval "$(direnv hook zsh)"
-fpath=($HOME/.zfunc $fpath) # PDM related fpath setting
-autoload -Uz compinit && compinit
 
 # Starship Prompt Initialization
 eval "$(starship init zsh)"
@@ -37,7 +211,6 @@ path=(
     "/Applications/KiCad/KiCad.app/Contents/MacOS"
     "/Applications/KiCad/KiCad.app/Contents/MacOS/kicad-cli"
     /Users/briansquires/.opencode/bin
-    $HOME/.antigravity/antigravity/bin
     # $HOME/.local/bin is already included above
     $path # Keep existing unique paths
 )
@@ -48,8 +221,24 @@ path=(
 
 # ====== NVM Configuration (loads early to allow PATH overrides) ======
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+if [[ -r "$NVM_DIR/alias/default" ]]; then
+    nvm_default_alias=$(<"$NVM_DIR/alias/default")
+    if [[ -x "$NVM_DIR/versions/node/$nvm_default_alias/bin/node" ]]; then
+        path=("$NVM_DIR/versions/node/$nvm_default_alias/bin" $path)
+    fi
+    unset nvm_default_alias
+fi
+
+load_nvm() {
+    unfunction nvm 2>/dev/null
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+}
+
+nvm() {
+    load_nvm
+    nvm "$@"
+}
 
 # ====== App-specific settings & ENV variables ======
 export MICRO_CONFIG_HOME="$HOME/.config/micro"
@@ -58,6 +247,7 @@ export LSCOLORS=ExFxBxDxCxegedabagacad
 export LESS='-R -X -F'
 export JULES_API_KEY="AQ.Ab8RN6Lkpg9h_W2uJSFlstF3c05flqwi3Nppw3nLnQCAK5e1kA"
 export BUN_INSTALL="$HOME/.bun"
+export CLAUDE_CODE_OAUTH_TOKEN="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"
 # Unset conflicting environment variables for Graphiti MCP
 unset SEMAPHORE_LIMIT MAX_REFLEXION_ITERATIONS
 
@@ -72,6 +262,7 @@ source ~/.octocode-completions
 
 # ====== Prompt & Shell Settings ======
 # PROMPT removed; using Starship prompt instead
+unset MAILCHECK
 HISTFILE="$HOME/.zsh_history"
 HISTSIZE=5000
 SAVEHIST=5000
@@ -84,16 +275,16 @@ if [[ "$TERM_PROGRAM" == "ghostty" ]]; then
 fi
 
 # ====== Aliases & Functions ======
-alias ls='eza --icons=always -1 -l'
+#alias ls='eza --icons=always -1 -l'
 alias ll='ls -lah'
 alias gs='git status'
 #alias python='python3'
 #alias pip='pip3' # Redundant, replaced by alias below
-alias pip="uv pip"
 alias bd-gemini="cd ~/.local/share/gemini-cli/issues && bd"
 alias ccdsp="claude --dangerously-skip-permissions"
 alias ccdspc="claude --dangerously-skip-permissions -c"
 alias zz='zellij'
+alias pip='pip3'
 
 # Connect to pve2 Claude Code session function
 pve2-claude() {
@@ -138,3 +329,28 @@ else
 fi
 ###-end-opencode-completions-###
 
+
+# opencode
+export PATH=/Users/briansquires/.opencode/bin:$PATH
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/Users/briansquires/.cache/lm-studio/bin"
+# End of LM Studio CLI section
+
+
+# Claude Code MCP API Keys
+export JULES_API_KEY='AQ.Ab8RN6Lkpg9h_W2uJSFlstF3c05flqwi3Nppw3nLnQCAK5e1kA'
+export ASTA_API_KEY='dNCWvzUJp5aFcB0npK0aGZ1OvH33BP06rsNvvnG9'
+export EDITOR='nvim'
+
+if command -v wt >/dev/null 2>&1; then eval "$(command wt config shell init zsh)"; fi
+alias zo='zoxide'
+alias y='yazi'
+
+export GITHUB_TOKEN=$(gh auth token)
+
+# beads / dolt remote credentials (2026-05-19)
+[ -f ~/.beads-env ] && source ~/.beads-env
+export PATH="$HOME/.cargo/bin:$PATH"
+
+fpath+=~/.zfunc; autoload -Uz compinit; compinit

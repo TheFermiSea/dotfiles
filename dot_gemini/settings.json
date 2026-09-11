@@ -7,23 +7,36 @@
     "pal": {
       "command": "/Users/briansquires/pal-mcp-server/pal-mcp-server"
     },
+    "notebooklm-mcp": {
+      "command": "notebooklm-mcp",
+      "args": []
+    },
     "context7": {
       "httpUrl": "https://mcp.context7.com/mcp",
       "headers": {
-        "CONTEXT7_API_KEY": "",
+        "CONTEXT7_API_KEY": "ctx7sk-5537c2e8-af19-46d8-9995-ff9d5556ef8d",
         "Accept": "application/json, text/event-stream"
       }
+    },
+    "notebooklm": {
+      "command": "notebooklm-mcp",
+      "args": [],
+      "trust": true
     }
   },
   "model": {
-    "compressionThreshold": 0.6
+    "compressionThreshold": 0.6,
+    "name": "auto-gemini-3"
   },
   "general": {
     "previewFeatures": true,
     "sessionRetention": {
-      "enabled": true
+      "enabled": true,
+      "warningAcknowledged": true,
+      "maxAge": "30d"
     },
-    "enablePromptCompletion": true
+    "enablePromptCompletion": true,
+    "defaultApprovalMode": "auto_edit"
   },
   "output": {
     "format": "json"
@@ -32,22 +45,16 @@
     "showStatusInTitle": true,
     "showMemoryUsage": true,
     "showCitations": true,
-    "showModelInfoInChat": true
+    "showModelInfoInChat": true,
+    "errorVerbosity": "full",
+    "useBackgroundColor": true
   },
   "context": {
     "loadMemoryFromIncludeDirectories": true
   },
-  "tools": {
-    "shell": {
-      "showColor": true
-    },
-    "autoAccept": true,
-    "useRipgrep": true
-  },
   "experimental": {
-    "codebaseInvestigatorSettings": {
-      "maxNumTurns": 25
-    }
+    "skills": true,
+    "modelSteering": true
   },
   "security": {
     "folderTrust": {
@@ -55,6 +62,12 @@
     },
     "auth": {
       "selectedType": "oauth-personal"
+    },
+    "enablePermanentToolApproval": true
+  },
+  "tools": {
+    "shell": {
+      "showColor": true
     }
   }
 }

@@ -245,9 +245,7 @@ export MICRO_CONFIG_HOME="$HOME/.config/micro"
 export CLICOLOR=1
 export LSCOLORS=ExFxBxDxCxegedabagacad
 export LESS='-R -X -F'
-export JULES_API_KEY="AQ.Ab8RN6Lkpg9h_W2uJSFlstF3c05flqwi3Nppw3nLnQCAK5e1kA"
 export BUN_INSTALL="$HOME/.bun"
-export CLAUDE_CODE_OAUTH_TOKEN="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"
 # Unset conflicting environment variables for Graphiti MCP
 unset SEMAPHORE_LIMIT MAX_REFLEXION_ITERATIONS
 
@@ -295,11 +293,9 @@ pve2-claude() {
 # bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
-export CONTEXT7_API_KEY="ctx7sk-49242734-8cb7-467d-a1d6-f2137c4bf554"
 
 # Amp CLI
 export PATH="/Users/briansquires/.amp/bin:$PATH"
-export ASTA_API_KEY="dNCWvzUJp5aFcB0npK0aGZ1OvH33BP06rsNvvnG9"
 export MORPH_MODEL="auto"
 #compdef opencode
 ###-begin-opencode-completions-###
@@ -339,18 +335,19 @@ export PATH="$PATH:/Users/briansquires/.cache/lm-studio/bin"
 
 
 # Claude Code MCP API Keys
-export JULES_API_KEY='AQ.Ab8RN6Lkpg9h_W2uJSFlstF3c05flqwi3Nppw3nLnQCAK5e1kA'
-export ASTA_API_KEY='dNCWvzUJp5aFcB0npK0aGZ1OvH33BP06rsNvvnG9'
 export EDITOR='nvim'
 
 if command -v wt >/dev/null 2>&1; then eval "$(command wt config shell init zsh)"; fi
 alias zo='zoxide'
 alias y='yazi'
 
-export GITHUB_TOKEN=$(gh auth token)
 
 # beads / dolt remote credentials (2026-05-19)
 [ -f ~/.beads-env ] && source ~/.beads-env
 export PATH="$HOME/.cargo/bin:$PATH"
 
 fpath+=~/.zfunc; autoload -Uz compinit; compinit
+
+# API keys moved to ~/.zshrc.secrets on 2026-09-11 (sourced at line ~220).
+# Never inline a key here: .zshrc is tracked in the dotfiles repo in PLAINTEXT,
+# while .zshrc.secrets is age-encrypted. Keys affected: ASTA_API_KEY, CONTEXT7_API_KEY, JULES_API_KEY

@@ -112,3 +112,12 @@
 .claude/settings.local.json
 AGENTS.md
 {{ end }}
+
+
+# ~/.claude/CLAUDE.md is TOOL-OWNED (added 2026-09-11). CodeGraph and lean-ctx
+# write marked blocks into it and re-inject on every run, so managing it means
+# chezmoi and those tools overwrite each other forever. On ai-proxy an apply
+# deleted a lean-ctx block naming the alternatives to Grep/Glob -- which that
+# host's settings.json actually denies. Shared content ships as
+# .claude/rules/00-global.md instead; Claude Code loads all of ~/.claude/rules/.
+.claude/CLAUDE.md

@@ -78,3 +78,37 @@
 **/.DS_Store
 *.pyc
 *.swp
+
+# ---------------------------------------------------------------------------
+# HOST SCOPING (added 2026-09-11)
+#
+# The laptop (darwin) is the only machine that gets the full dotfiles: shell,
+# ssh, editor, per-tool config. The Linux boxes are purpose-built servers whose
+# shell config is genuinely different — ai-proxy's .zshrc is 90 lines against
+# the laptop's 353, and its .zshenv/.bashrc were just corrected to remove
+# account-pooling proxy exports. Pushing the laptop's copies there would undo
+# that and break machine-specific setup.
+#
+# What servers DO get is the agent instruction layer, which is the thing that
+# actually needs to be identical everywhere: ~/.claude/CLAUDE.md and
+# ~/.claude/rules/. Their own agents/, commands/ and plugins/ stay local —
+# ai-proxy has 24 agents and 72 commands of its own.
+# ---------------------------------------------------------------------------
+{{ if ne .chezmoi.os "darwin" }}
+.zshrc
+.zshrc.secrets
+.ssh/**
+.config/nvim/**
+.config/yazi/**
+.config/opencode/**
+.config/superpowers/**
+.pixi/**
+.gemini/**
+.codex/**
+.claude/agents/**
+.claude/commands/**
+.claude/plugins/**
+.claude/settings.json
+.claude/settings.local.json
+AGENTS.md
+{{ end }}

@@ -351,3 +351,14 @@ fpath+=~/.zfunc; autoload -Uz compinit; compinit
 # API keys moved to ~/.zshrc.secrets on 2026-09-11 (sourced at line ~220).
 # Never inline a key here: .zshrc is tracked in the dotfiles repo in PLAINTEXT,
 # while .zshrc.secrets is age-encrypted. Keys affected: ASTA_API_KEY, CONTEXT7_API_KEY, JULES_API_KEY
+
+# mise shims, LAST (added 2026-09-11).
+# They are also prepended in ~/.zshenv, but .zshrc runs afterwards and puts
+# /opt/homebrew/bin ahead of them at line ~201 — so Homebrew's bd 1.1.2 was
+# winning over the mise-pinned bd 1.2.2 that .mise.toml asks for. Re-prepending
+# here, after every other PATH manipulation, is what makes the pins actually
+# take effect for interactive shells.
+if [ -d "$HOME/.local/share/mise/shims" ]; then
+  path=("$HOME/.local/share/mise/shims" ${path:#$HOME/.local/share/mise/shims})
+  export PATH
+fi

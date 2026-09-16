@@ -41,6 +41,7 @@ set -uo pipefail
 HOOKS="
 PreToolUse|Bash|block-inplace-stream-edit.py
 PreToolUse|Bash|block-heredoc-stdin-collision.py
+PreToolUse|Bash|block-filtered-paginated-listing.py
 PostToolUse|Bash|flag-shell-abort-read-as-result.py
 "
 

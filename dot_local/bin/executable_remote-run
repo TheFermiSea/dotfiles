@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+# remote-run TARGET SCRIPT [ARGS...]
+#
+# Run a local script file on another machine without passing code through shell quoting.
+#   TARGET   user@host or host            -> runs over ssh
+#            host/CTID                     -> runs inside Proxmox container CTID on host (pct exec)
+#   SCRIPT   *.py runs with python3; anything else with bash (a #! line wins if present)
+#
+# The script is syntax-checked HERE first (python3 -m py_compile / bash -n), copied to a temp
+# path on the target, run with ARGS (each passed as one argument, quoted with %q), then removed.
+# Exit status is the script's. Companion to ~/.claude/hooks/block-broken-shell-quoting.py.
+set -euo pipefail
+[ $# -ge 2 ] || { echo "usage: remote-run TARGET SCRIPT [ARGS...]   (TARGET: host | user@host | host/CTID)" >&2; exit 2; }
+target=$1 script=$2; shift 2
+[ -f "$script" ] || { echo "remote-run: no such file: $script" >&2; exit 2; }
+
+interp=bash
+case "$script" in *.py) interp=python3 ;; esac
+first=$(head -n1 "$script")
+case "$first" in
+  '#!'*python*) interp=python3 ;;
+  '#!'*bash*|'#!'*/sh*) interp=bash ;;
+esac
+
+if [ "$interp" = python3 ]; then
+  python3 - "$script" <<'PY' || { echo "remote-run: $script does not compile; nothing was sent" >&2; exit 3; }
+import sys
+compile(open(sys.argv[1], encoding="utf-8").read(), sys.argv[1], "exec")
+PY
+else
+  bash -n "$script" || { echo "remote-run: bash -n rejects $script; nothing was sent" >&2; exit 3; }
+fi
+
+host=${target%%/*} ctid=
+[ "$target" != "$host" ] && ctid=${target#*/}
+name="remote-run.$$.$(basename "$script")"
+qargs=$(printf ' %q' "$@")
+
+if [ -z "$ctid" ]; then
+  scp -q "$script" "$host:/tmp/$name"
+  ssh "$host" "$interp /tmp/$name$qargs; rc=\$?; rm -f /tmp/$name; exit \$rc"
+else
+  scp -q "$script" "$host:/tmp/$name"
+  ssh "$host" "pct push $ctid /tmp/$name /tmp/$name && rm -f /tmp/$name && pct exec $ctid -- $interp /tmp/$name$qargs; rc=\$?; pct exec $ctid -- rm -f /tmp/$name; exit \$rc"
+fi
